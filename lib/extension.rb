@@ -12,7 +12,9 @@ require "open_uri_redirections"
 
 # open-uri に渡すオプションを生成（必要に応じて extensions/*.rb でオーバーライドする）
 def make_open_uri_options(add)
+  ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
   add.merge(ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE)
+  add.merge("User-Agent" => ua)
 end
 
 #
