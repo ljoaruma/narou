@@ -1,55 +1,68 @@
 @charset "utf-8";
 @namespace "http://www.w3.org/1999/xhtml";
 
-.vrtl body, .hltr body {
+/** 横書きフォント */
+.hltr body {
+	font-family: "ＭＳ 明朝", "MS Mincho", "ヒラギノ明朝 ProN W3", "HiraMinProN-W3", serif, sans-serif;
+}
+/** 縦書きフォント */
+.vrtl body {
 	font-family: "@ＭＳ 明朝", "@MS Mincho", "ヒラギノ明朝 ProN W3", "HiraMinProN-W3", serif, sans-serif;
+}
+
+/** 以下 narou.rb オリジナル設定 */
+
+body {
 	line-height: <%= line_height %>em !important;
 }
 
-.vrtl .gtc, .hltr .gtc, .b {
+/* .gtc .b .i は電書協準拠により .gfont .bold .italic となる */
+/* AozoraEpub3には太字注記でゴシックを使うオプション(BoldUseGothic)あるが.bに設定している */
+.vrtl .bold {
 	font-family: '@ＭＳ ゴシック','@MS Gothic',sans-serif !important;
 }
 
-.vrtl rt, .hltr rt { font-size: 0.6em; }
+/* .bold と .italic の設定は標準で成されている気がするけど */
+.b { font-weight: bold; }
+.i { font-style: italic; }
+
+rt { font-size: 0.6em; }
 
 /* カスタム注記用 */
+
 /* 柱（もどき） */
+/* 柱（もどき）は横書きされるので切替えは必要なさそう */
 .running_head {
 	position: absolute !important;
 	top: 15px;
 	left: 10px;
 	font-size: 0.8em;
 }
-<% if tategaki %>
+
 /* ページ左右中央 調整 */
-.main.block-align-center div.mt3 {
-	margin-left: 0 !important;
-	margin-right: 0 !important;
+/* ページ左右中央では html.hltr なので横書きの３字下げも付くのを防ぐ */
+.main.vrtl.block-align-center div.mt3 {
+	margin-left: 0;
 }
-.main.block-align-center > div {
-	margin-top: 4em !important;
-}
-div.main.block-align-center div.running_head {
-	position: absolute !important;
-	top: 2em;
-	left: 10px;
-	font-size: 0.8em;
-}
-<% end %>
+
 <% if use_dakuten_font %>
 /* 濁点フォント */
 @font-face {
 	font-family: "DakutenAokinMincho";
 	src: url(../fonts/DMincho.ttf) format("truetype");
 }
-.vrtl .dakuten, .hltr .dakuten {
+
+/* 横書きでは設定の有無に関わらず濁点は付かない。narou.rbで縦書きに限定すべき？ */
+.dakuten {
 	font-family: "DakutenAokinMincho" !important;
 }
+
 <% end %>
 /* 二分アキ */
-.half_em_space { padding-top: 0.5em; }
+.vrtl .half_em_space { padding-top: 0.5em; }
 
 /* パラメーター（折り返しあり） */
+/* margin, padding の設定あるが許容範囲？ */
 .custom_parameter_block {
 	font-size: 100%;
 	line-height: 1.2em !important;
@@ -63,14 +76,15 @@ div.main.block-align-center div.running_head {
 	box-shadow: 3px 3px 3px #bbb;
 	-webkit-box-shadow: 3px 3px 3px #bbb;
 }
-.vrtl .jzm .custom_parameter_block, .hltr .jzm .custom_parameter_block {
+.jzm .custom_parameter_block {
 	display: block;
 }
-.vrtl .jzm .p .custom_parameter_block, .hltr .jzm .p .custom_parameter_block {
+.jzm .p .custom_parameter_block {
 	display: inline-block;
 }
 
 /* 前書き */
+/* height の設定あるので縦書き限定 */
 .vrtl .introduction {
 	float: right;
 	font-size: 83%;
@@ -85,14 +99,15 @@ div.main.block-align-center div.running_head {
 	text-align: left !important;
 	height: 70%;
 }
-.vrtl .jzm .introduction, .hltr .jzm .introduction {
+.jzm .introduction {
 	display: block;
 }
-.vrtl .jzm .p .introduction, .hltr .jzm .p .introduction {
+.jzm .p .introduction {
 	display: inline-block;
 }
 
 /* 後書き */
+/* height の設定あるので縦書き限定 */
 .vrtl .postscript {
 	float: right;
 	font-size: 83%;
@@ -107,13 +122,16 @@ div.main.block-align-center div.running_head {
 	text-align: left !important;
 	height: 70%;
 }
-.vrtl .jzm .postscript, .hltr .jzm .postscript {
+.jzm .postscript {
 	display: block;
 }
-.vrtl .jzm .p .postscript, .hltr .jzm .p .postscript {
+.jzm .p .postscript {
 	display: inline-block;
 }
 
-.vrtl div.clear, .hltr div.clear {
+/* .hltr .vrtl 無指定でも問題ないと思う */
+div.clear {
 	clear: both;
 }
+
+/* 字詰め (.jzm) 設定はよく分からない */
