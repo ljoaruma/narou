@@ -27,6 +27,7 @@ Narou.rb - 小説家になろうのダウンローダ＆縦書き整形＆管理
 その他にも変換したデータを直接電子書籍端末へ送信する機能は、メールで送信する機能などもあります。
 
 詳細な説明やインストール方法は **[Narou.rb 説明書](https://github.com/whiteleaf7/narou/wiki)** を御覧ください。
+開発者向けのドキュメントは **[開発者向け説明書](developer.md)** をご覧ください。
 
 ![WEB UI ScreenCapture](https://raw.github.com/wiki/whiteleaf7/narou/images/webui_cap.png)
 ![Console ScreenCapture](https://raw.github.com/wiki/whiteleaf7/narou/images/narou_cap.gif)
