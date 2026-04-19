@@ -17,17 +17,18 @@ at_exit do
 end
 Encoding.default_external = Encoding::UTF_8
 Gem::Specification.new do |gem|
-  gem.name          = "narou"
+  gem.name          = "narou-ljoaruma"
   gem.version       = ::Narou::VERSION
   gem.license       = "MIT"
-  gem.authors       = ["whiteleaf7"]
-  gem.email         = ["2nd.leaf@gmail.com"]
-  gem.homepage      = "http://whiteleaf.hatenablog.com/"
-  gem.summary       = %q{Narou.rb ― 小説家になろうダウンローダ＆縦書用整形スクリプト}
+  gem.authors       = ["ljoaruma"]
+  gem.email         = ["ljoaruma@users.noreply.github.com"]
+  gem.homepage      = "https://github.com/ljoaruma/narou"
+  gem.summary       = %q{Narou.rb ― 小説家になろうダウンローダ＆縦書用整形スクリプト(個人パッチ版)}
   gem.description   = %q{
 小説家になろうで公開されている小説の管理、及び電子書籍データへの
 変換を支援します。縦書用に特化されており、横書き用に特化されたWEB小説
 を違和感なく縦書で読むことが出来るようになります。
+本モジュールは http://whiteleaf.hatenablog.com/ のnarou.rbをベースに個人的なパッチを加えたものです。
 }.split("\n").join
   install_message = <<-EOS
 #{"*" * 60}
