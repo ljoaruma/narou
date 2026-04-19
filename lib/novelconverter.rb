@@ -638,7 +638,10 @@ class NovelConverter
     unless subtitles
       subtitles = cut_subtitles(toc["subtitles"])
     end
-    if is_hotentry == false && @setting.slice_size > 0 && subtitles.length > @setting.slice_size
+    if is_hotentry == false && ! @setting.segment_by_range.empty?
+      stream_io.puts "#{@setting.segment_by_range}の範囲で分割して変換します"
+      array_of_subtitles = subtitles_segment_by_range(subtitles, @setting.segment_by_range, @setting.slice_size)
+    elsif is_hotentry == false && @setting.slice_size > 0 && subtitles.length > @setting.slice_size
       stream_io.puts "#{@setting.slice_size}話ごとに分割して変換します"
       array_of_subtitles = slice_subtitles(subtitles, @setting.slice_size)
     else
@@ -684,6 +687,98 @@ class NovelConverter
       result = [subtitles[-1]]
     end
     result
+  end
+
+  def subtitles_segment_by_range(subtitles, segment_ranges, slice_size)
+    NovelConverter.subtitles_segment_by_range(subtitles, segment_ranges, slice_size)
+  end
+
+  #
+  # subtitleをsegment_by_rangeに従って分割する
+  #
+  def self.subtitles_segment_by_range(subtitles, segment_ranges, slice_size)
+    check_pattern = /(-[0-9]+)|([0-9]+-)|([0-9]+-[0-9]+)(,(-[0-9]+)|([0-9]+-)|([0-9]+-[0-9]+))*/
+    if !check_pattern.match(segment_ranges)
+      if slice_size > 0
+        return slice_subtitles(subtitles, slice_size)
+      else
+        return [subtitles]
+      end
+    end
+
+    normalized_segment_rangess = normalize_segment_ranges(segment_ranges)
+
+    result = []
+    last_chapter = 0
+    normalized_segment_rangess.each do |first, second|
+      if last_chapter < first
+        gap = subtitles[(last_chapter)..(first - 1)]
+        if slice_size > 0
+          result.concat(gap.each_slice(slice_size).to_a)
+        else
+          result << gap
+        end
+      end
+
+      result << subtitles[first..second]
+      last_chapter = second + 1
+    end
+
+    if last_chapter < subtitles.length
+      last_gap = subtitles[last_chapter..]
+      if slice_size > 0
+        result.concat(last_gap.each_slice(slice_size).to_a)
+      else
+        result << last_gap
+      end
+    end
+
+    result
+  end
+
+  #
+  # segment_by_rangeのリストの正規化
+  #
+  def self.normalize_segment_ranges(segment_ranges)
+    segment_ranges_numeric_pair = segment_ranges.split(",").map do |chapter_range|
+      first, second, _ = chapter_range.split("-",-1)
+      [first.empty? ? nil : first.to_i, second.empty? ? nil : second.to_i]
+    end
+
+    # ペアのnull部分の補完(secondがnilで次のfirstもnilなら破棄, last_period 10-,-20 のケースが10-20になるように期待)
+    completion_segment_ranges = []
+    last_period = 0;
+    segment_ranges_numeric_pair.each_with_index do |(first, second), index|
+      first ||= (last_period + 1)
+      last_period = first - 1
+
+      if !second
+          next if segment_ranges_numeric_pair.length <= index + 1
+          next if ! segment_ranges_numeric_pair[index + 1][0]
+
+          second = segment_ranges_numeric_pair[index + 1][0] - 1
+      end
+      last_period = second
+
+      # 0オリジンに変換
+      completion_segment_ranges << [first - 1, second - 1]
+    end
+
+    # チャプターリストの整合性チェック
+    normalize_segment_ranges = []
+    completion_segment_ranges.each_with_index do |(first, second), index|
+      next if !first
+      next if !second
+
+      if ! normalize_segment_ranges.empty?
+        first = normalize_segment_ranges.last[1] + 1 if normalize_segment_ranges.last[1] >= first
+      end
+      next if first > second
+
+      normalize_segment_ranges << [first, second]
+    end
+
+    return normalize_segment_ranges
   end
 
   #

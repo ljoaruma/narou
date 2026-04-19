@@ -481,6 +481,16 @@ class NovelSetting
             "cut_old_subtitlesで処理した後の話数を対象に処理する"
     },
     {
+      name: "segment_by_range",
+      type: :string,
+      value: "",
+      help: "小説を指定した話数の範囲毎に分割する。指定した範囲外はslice_sizeが指定されている場合は、slice_sizeに従って分割する\n" \
+            "cut_old_subtitlesで処理した後の話数を対象に処理する\n" \
+            "例：\"1-20\" : 1話から20話までを分割、以降は1つにまとめる。\n" \
+            "\"20-40,41-80\" : 1話から19話まではslice_sizeごとに分割、20話から40話まで, 41話から80話までを分割、以降はslice_sizeごとに分割まとめる\n" \
+            "\"-20,21-,30-40\" : 1話から20話まで,21話から29話まで,30話から40話まで、以降は1つにまとめる\n"
+    },
+    {
       name: "author_comment_style",
       type: :select,
       value: "css",
