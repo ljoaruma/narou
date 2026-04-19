@@ -404,7 +404,7 @@ class NovelConverter
 
     array_of_output_path = []
     array_of_converted_text.each_with_index do |converted_text, i|
-      output_path = create_output_path(text, converted_text, i + 1)
+      output_path = create_output_path(text, converted_text, array_of_converted_text.length > 1 ? i + 1 : nil)
       File.write(output_path, converted_text)
       array_of_output_path.push(output_path)
     end
@@ -600,7 +600,7 @@ class NovelConverter
       output_path += ".txt"
     end
     # change output_path to "basename_#{index}.ext" if index is greater than 1
-    if index > 1
+    if index
       ext = File.extname(output_path)
       output_path = File.join(File.dirname(output_path), File.basename(output_path, ext))
       output_path += "_#{index}#{ext}"
