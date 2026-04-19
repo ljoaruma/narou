@@ -32,6 +32,12 @@ Gem::Specification.new do |gem|
   install_message = <<-EOS
 #{"*" * 60}
 
+3.9.1-ljoaruma-p5 : 2026-04-19
+-----------------
+- 小説の指定範囲を切り出す設定 `segment_by_range` が追加されました。segment_by_range で指定した範囲の話数で小説を分割します。
+- slice_sizeを指定した小説の1つ目のファイル名に"_1"がつかない問題の修正
+- slice_size指定時、2つ目以降のファイルの目次が不正になる問題の修正
+
 3.9.1-ljoaruma-p4: 2025-10-02
 -----------------
 - カクヨム 構造変更修正 #452 @kita77777
