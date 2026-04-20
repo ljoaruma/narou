@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    narou (3.9.1p4)
+    narou-ljoaruma (3.9.1p5)
       activesupport (>= 6.1, < 8.0)
       base64 (~> 0.3.0)
       csv (~> 3.3, >= 3.3.5)
@@ -158,7 +158,7 @@ PLATFORMS
 
 DEPENDENCIES
   awesome_print (~> 1.8)
-  narou!
+  narou-ljoaruma!
   pry (~> 0.12)
   pry-byebug (~> 3.8)
   rdbg (~> 0.1.0)
