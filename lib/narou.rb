@@ -262,7 +262,7 @@ module Narou
 
     def get_ebook_file_paths_from_components(dir, base, ext)
       paths = [File.join(dir, "#{base}#{ext}")]
-      index = 2
+      index = 1
       while File.exist?(path = File.join(dir, "#{base}_#{index}#{ext}"))
         paths.push(Pathname(path))
         index += 1
