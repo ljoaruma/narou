@@ -733,7 +733,7 @@ class NovelConverter
       end
     end
 
-    result
+    maintain_chapter(result)
   end
 
   #
@@ -788,10 +788,16 @@ class NovelConverter
   def slice_subtitles(subtitles, slice_size)
     result = subtitles.each_slice(slice_size).to_a
 
+    NovelConverter.maintain_chapter(result)
+  end
+
+  # 分割されたsubtitlesのchapter/subchapterをケアする
+  def self.maintain_chapter(subtitles)
+    result = []
+
     last_chapter = ''
     last_subchapter = ''
-
-    result.each do |sliced_subtitles|
+    subtitles.each do |sliced_subtitles|
       sliced_subtitles[0]['chapter'] = last_chapter if ! last_chapter.empty?
       sliced_subtitles[0]['subchapter'] = last_subchapter if ! last_subchapter.empty?
 
@@ -799,10 +805,11 @@ class NovelConverter
         last_chapter = chapter['chapter'] if ! chapter['chapter'].empty?
         last_subchapter = chapter['subchapter'] if ! chapter['subchapter'].empty?
       end
+
+      result << sliced_subtitles
     end
 
     result
-
   end
 
   #
