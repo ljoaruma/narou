@@ -791,6 +791,11 @@ class Downloader
       # 短編小説
       subtitles = create_short_story_subtitles(info)
     end
+    if subtitles.empty?
+      @stream.error "何らかの理由により目次が取得できませんでした(subtitles.empty?)"
+      return false
+    end
+
     @setting["subtitles"] = subtitles
 
     toc_objects = {
