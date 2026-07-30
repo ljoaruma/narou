@@ -800,6 +800,12 @@ class Downloader
       "story" => @setting["story"],
       "subtitles" => subtitles
     }
+
+    # 目次データが取れた小説情報は404のタグを取り除く
+    if database.novel_tagged?(@id, "404")
+      Command::Tag.execute!(%W(#{@id} --delete 404), io: Narou::NullIO.new)
+    end
+
     toc_objects
   rescue OpenURI::HTTPError, Errno::ECONNRESET, Errno::ETIMEDOUT, Net::OpenTimeout, IO::TimeoutError => e
     raise if through_error   # エラー処理はしなくていいからそのまま例外を受け取りたい時用
