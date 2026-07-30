@@ -645,7 +645,7 @@ class NovelConverter
       stream_io.puts "#{@setting.slice_size}話ごとに分割して変換します"
       array_of_subtitles = slice_subtitles(subtitles, @setting.slice_size)
     else
-      array_of_subtitles = [subtitles]
+      array_of_subtitles = NovelConverter.maintain_chapter([subtitles], @novel_title)
     end
     toc["story"] = @converter.convert(toc["story"], "story")
     site_setting = SiteSetting.find(toc["toc_url"])
@@ -681,22 +681,24 @@ class NovelConverter
       result = subtitles
     when 1...subtitles.size
       stream_io.puts "#{cut_size}話分カットして変換します"
-      result = subtitles[cut_size..-1]
+      result = NovelConverter.maintain_chapter([subtitles[0...cut_size], subtitles[cut_size..-1]], @novel_title)[1]
     else
       stream_io.puts "最新話のみ変換します"
-      result = [subtitles[-1]]
+      result = (subtitles.size > 1) ?
+        (NovelConverter.maintain_chapter([subtitles[0...-2], subtitles[-1]], @novel_title)[1]) :
+        [subtitles[-1]]
     end
     result
   end
 
   def subtitles_segment_by_range(subtitles, segment_ranges, slice_size)
-    NovelConverter.subtitles_segment_by_range(subtitles, segment_ranges, slice_size)
+    NovelConverter.subtitles_segment_by_range(subtitles, segment_ranges, slice_sizem, @novel_title)
   end
 
   #
   # subtitleをsegment_by_rangeに従って分割する
   #
-  def self.subtitles_segment_by_range(subtitles, segment_ranges, slice_size)
+  def self.subtitles_segment_by_range(subtitles, segment_ranges, slice_size, title)
     check_pattern = /(-[0-9]+)|([0-9]+-)|([0-9]+-[0-9]+)(,(-[0-9]+)|([0-9]+-)|([0-9]+-[0-9]+))*/
     if !check_pattern.match(segment_ranges)
       if slice_size > 0
@@ -733,7 +735,7 @@ class NovelConverter
       end
     end
 
-    maintain_chapter(result)
+    maintain_chapter(result, title)
   end
 
   #
@@ -788,18 +790,20 @@ class NovelConverter
   def slice_subtitles(subtitles, slice_size)
     result = subtitles.each_slice(slice_size).to_a
 
-    NovelConverter.maintain_chapter(result)
+    NovelConverter.maintain_chapter(result, @novel_title)
   end
 
   # 分割されたsubtitlesのchapter/subchapterをケアする
-  def self.maintain_chapter(subtitles)
+  def self.maintain_chapter(subtitles, title)
     result = []
 
-    last_chapter = ''
+    has_anychapter = subtitles.any? {|ss| ss.any?{|s| !s['chapter'].empty? } }
+
+    last_chapter = has_anychapter ? title : ''
     last_subchapter = ''
     subtitles.each do |sliced_subtitles|
-      sliced_subtitles[0]['chapter'] = last_chapter if ! last_chapter.empty?
-      sliced_subtitles[0]['subchapter'] = last_subchapter if ! last_subchapter.empty?
+      sliced_subtitles[0]['chapter'] = last_chapter if ! last_chapter.empty? && sliced_subtitles[0]['chapter'].empty?
+      sliced_subtitles[0]['subchapter'] = last_subchapter if ! last_subchapter.empty? && sliced_subtitles[0]['subchapter'].empty?
 
       sliced_subtitles.each do |chapter|
         last_chapter = chapter['chapter'] if ! chapter['chapter'].empty?
