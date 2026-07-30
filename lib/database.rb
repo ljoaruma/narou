@@ -63,6 +63,13 @@ class Database
     @database.keys.include?(id.to_i)
   end
 
+  def novel_tagged?(id, tag)
+    return false if !novel_exists?(id)
+    return false if !@database[id.to_i].keys.include?("tags")
+
+    @database[id.to_i]["tags"].include?(tag)
+  end
+
   def get_data(type, value)
     @database.each_value do |data|
       return data if data[type] == value
