@@ -692,7 +692,7 @@ class NovelConverter
   end
 
   def subtitles_segment_by_range(subtitles, segment_ranges, slice_size)
-    NovelConverter.subtitles_segment_by_range(subtitles, segment_ranges, slice_sizem, @novel_title)
+    NovelConverter.subtitles_segment_by_range(subtitles, segment_ranges, slice_size, @novel_title)
   end
 
   #
@@ -806,8 +806,8 @@ class NovelConverter
       sliced_subtitles[0]['subchapter'] = last_subchapter if ! last_subchapter.empty? && sliced_subtitles[0]['subchapter'].empty?
 
       sliced_subtitles.each do |chapter|
-        last_chapter = chapter['chapter'] if ! chapter['chapter'].empty?
-        last_subchapter = chapter['subchapter'] if ! chapter['subchapter'].empty?
+        last_chapter = chapter['chapter'] if !chapter['chapter'].nil? && !chapter['chapter'].empty?
+        last_subchapter = chapter['subchapter'] if !chapter['subchapter'].nil? && !chapter['subchapter'].empty? 
       end
 
       result << sliced_subtitles
