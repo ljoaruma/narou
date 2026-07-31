@@ -66,6 +66,7 @@ class Database
   def novel_tagged?(id, tag)
     return false if !novel_exists?(id)
     return false if !@database[id.to_i].keys.include?("tags")
+    return false if !@database[id.to_i]["tags"]
 
     @database[id.to_i]["tags"].include?(tag)
   end
