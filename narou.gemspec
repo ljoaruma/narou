@@ -33,6 +33,11 @@ Gem::Specification.new do |gem|
   install_message = <<-EOS
 #{"*" * 60}
 
+3.9.1-ljoaruma-p* : yyyy-mm-dd
+-----------------
+#### 修正内容
+- タグチェック前のnilチェック漏れ
+
 3.9.1-ljoaruma-p7 : 2026-07-29
 -----------------
 #### 修正内容
