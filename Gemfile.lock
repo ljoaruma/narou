@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    narou-ljoaruma (3.9.1p5)
+    narou-ljoaruma (3.9.1p7)
       activesupport (>= 6.1, < 8.0)
       base64 (~> 0.3.0)
       csv (~> 3.3, >= 3.3.5)
