@@ -23,8 +23,10 @@ class Illustration
     @inspector = inspector
   end
 
-  def scanner(source, &block)
+  def scanner(source, enable_illust, &block)
     source.gsub!(/［＃挿絵（(.+?)）入る］/) do |match|
+      next "" unless enable_illust
+
       url = $1
       url = "https:#{url}" if url.start_with?("//")
       if url =~ URI::DEFAULT_PARSER.make_regexp
@@ -36,6 +38,8 @@ class Illustration
       end
     end
     source.gsub!(NAROU_ILLUST_TAG_PATTERN) do
+      next "" unless enable_illust
+
       id1, id2 = $1, $2
       basename = "#{id1},#{id2}.*"
       url = NAROU_ILLUST_URL % [id2, id1]

@@ -1013,8 +1013,7 @@ class ConverterBase
   # 挿絵画像が存在しなければダウンロードして保存する
   #
   def replace_illust_tag(data)
-    @illustration.scanner(data) do |chuki|
-      next "" unless @setting.enable_illust
+    @illustration.scanner(data, @setting.enable_illust) do |chuki|
       @illust_chuki_list << chuki
       "［＃挿絵＝#{@illust_chuki_list.size - 1}］\n"
     end
